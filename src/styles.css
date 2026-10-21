@@ -3302,21 +3302,17 @@ main:focus {
 }
 @keyframes dialog-in {
   from {
-    opacity: 0;
     transform: translateY(7px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
 @keyframes entrance {
   from {
-    opacity: 0;
     transform: translateY(9px);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -5399,4 +5395,16 @@ h1:focus {
 .dispatch-button {
   background: #755fa7 !important;
   border-color: #6d589c !important;
+}
+
+/* Keep navigation readable and contained in shorter desktop viewports. */
+.sidebar {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #414962 transparent;
+}
+.sidebar-bottom > button,
+.sidebar-bottom > a {
+  color: #b4bdd4;
 }

@@ -5,6 +5,13 @@ import { readFile } from 'node:fs/promises';
 async function open(page: Page, path = '') {
   await page.goto(`./${path}`);
   await expect(page.getByText('Replay engine ready', { exact: true })).toBeVisible();
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    const motions = document
+      .getAnimations()
+      .filter((a) => a.effect?.getComputedTiming().iterations !== Infinity);
+    await Promise.all(motions.map((a) => a.finished.catch(() => undefined)));
+  });
 }
 async function configure(page: Page, policy = 'healthy', name = 'Ledger Relay') {
   await open(
