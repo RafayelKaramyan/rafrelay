@@ -4403,18 +4403,19 @@ main:focus {
   .integration-panel {
     display: grid;
     grid-template-columns: 1fr 1.6fr;
-    align-items: center;
+    grid-template-rows: auto 1fr;
+    align-items: start;
   }
   .integration-panel .panel-heading {
     grid-column: 1;
     grid-row: 1;
     align-self: start;
-    padding: 17px 17px 0;
+    padding: 17px 17px 10px;
   }
   .health-topology {
     grid-column: 1;
-    grid-row: 1;
-    margin-top: 60px;
+    grid-row: 2;
+    margin-top: 0;
     padding: 0 15px 0 17px;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -4436,7 +4437,7 @@ main:focus {
     margin-top: 0;
   }
   .health-list {
-    grid-row: 1;
+    grid-row: 1 / span 2;
     grid-column: 2;
     border-left: 1px solid var(--line);
     padding: 7px 17px 7px 14px;
