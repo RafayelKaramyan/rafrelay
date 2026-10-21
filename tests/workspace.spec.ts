@@ -315,6 +315,7 @@ test('routing map opens the correct configuration and reflects the saved policy'
   await page.getByRole('button', { name: 'Save configuration', exact: true }).click();
   await expect(page.getByRole('dialog')).toHaveCount(0);
   await menu(page, 'Overview');
+  await expect(page).toHaveURL(/\/rafrelay\/$/);
   await expect(
     page.getByRole('link', { name: 'Ledger Relay configuration · Healthy', exact: true }),
   ).toBeVisible();
