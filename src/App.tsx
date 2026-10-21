@@ -1,12 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Activity,
   ArrowRight,
-  ArrowUpRight,
-  BookOpen,
   Cable,
-  ChevronDown,
-  ChevronRight,
   CircleHelp,
   Command,
   ExternalLink,
@@ -279,12 +275,18 @@ function Workspace() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
+  useLayoutEffect(() => {
+    if (menu) {
+      drawer.current
+        ?.querySelector<HTMLElement>('.navigation-close')
+        ?.focus({ preventScroll: true });
+    }
+  }, [menu]);
   useEffect(() => {
     if (!menu) return;
     const previousOverflow = document.body.style.overflow;
     const trigger = menuButton.current;
     document.body.style.overflow = 'hidden';
-    drawer.current?.querySelector<HTMLElement>('.sidebar-close')?.focus();
     const handler = (event: KeyboardEvent) => {
       if (document.querySelector('dialog[open]')) return;
       if (event.key === 'Escape') {
@@ -341,6 +343,80 @@ function Workspace() {
         Skip to main content
       </a>
       <div className="app-shell">
+        <header className="masthead" inert={menu}>
+          <div className="brand-lockup">
+            <Link to="/" className="brand" aria-label="Rafrelay overview">
+              <span className="brand-mark" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </span>
+              rafrelay<span className="brand-dot">/</span>
+            </Link>
+            <span className="brand-caption">
+              Partner integration
+              <br />
+              studio
+            </span>
+          </div>
+          <div className="masthead-actions">
+            <span className="sandbox-badge">
+              <span />
+              LOCAL SANDBOX
+            </span>
+            <button
+              className="command-trigger"
+              onClick={() => setCommand(true)}
+              aria-label="Search workspace"
+            >
+              <Search size={16} />
+              <span>Find a page</span>
+              <kbd>
+                <Command size={10} /> K
+              </kbd>
+            </button>
+            <button
+              className="icon-button motion-toggle"
+              aria-label={
+                book.motionPaused ? 'Enable interface motion' : 'Pause interface motion'
+              }
+              aria-pressed={book.motionPaused}
+              onClick={() => {
+                void runtime
+                  .toggleMotion()
+                  .catch((e: unknown) => runtime.notify(errorMessage(e), true));
+              }}
+            >
+              {book.motionPaused ? <Play size={17} /> : <Pause size={17} />}
+            </button>
+            <button
+              className="icon-button"
+              aria-label="Open workspace guide"
+              onClick={() => setGuide(true)}
+            >
+              <CircleHelp size={19} />
+            </button>
+            <a
+              className="source-link"
+              href="https://github.com/RafayelKaramyan/rafrelay"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Github size={16} />
+              <span>Source code</span>
+              <ExternalLink size={12} />
+            </a>
+            <button
+              ref={menuButton}
+              className="icon-button mobile-menu"
+              aria-label="Open navigation"
+              aria-expanded={menu}
+              onClick={() => setMenu(!menu)}
+            >
+              <Menu size={22} />
+            </button>
+          </div>
+        </header>
         {menu && (
           <button
             className="mobile-scrim"
@@ -352,161 +428,63 @@ function Workspace() {
         )}
         <aside
           ref={drawer}
-          className={`sidebar ${menu ? 'sidebar-open' : ''}`}
+          className={`navigation-shell ${menu ? 'navigation-open' : ''}`}
           role={menu ? 'dialog' : undefined}
           aria-modal={menu || undefined}
-          aria-label={menu ? 'Workspace navigation drawer' : 'Workspace sidebar'}
+          aria-label={menu ? 'Workspace navigation drawer' : 'Workspace sections'}
         >
-          <button
-            className="sidebar-close icon-button"
-            aria-label="Close navigation drawer"
-            onClick={() => setMenu(false)}
-          >
-            <X size={19} />
-          </button>
-          <Link to="/" className="brand" onClick={() => setMenu(false)}>
-            <span className="brand-mark">R</span>rafrelay<span className="brand-dot">.</span>
-          </Link>
-          <div className="workspace-selector">
-            <span className="workspace-avatar">N</span>
-            <span>
-              <strong>Northline</strong>
-              <small>Integration workspace</small>
-            </span>
-            <ChevronDown size={14} />
+          <div className="mobile-nav-heading">
+            <span>Explore the studio</span>
+            <button
+              className="navigation-close icon-button"
+              aria-label="Close navigation drawer"
+              onClick={() => setMenu(false)}
+            >
+              <X size={21} />
+            </button>
           </div>
-          <div className="nav-caption">WORKSPACE</div>
           <nav aria-label="Workspace navigation">
-            {navigation.map((n) => (
+            {navigation.map((n, index) => (
               <NavLink
                 key={n.path}
                 to={n.path}
                 end={n.path === '/'}
                 onClick={() => setMenu(false)}
               >
-                <n.icon size={18} />
+                <span className="nav-index" aria-hidden="true">
+                  0{index + 1}
+                </span>
                 <span>{n.label}</span>
                 {n.path === '/deliveries' && failures > 0 && (
                   <b className="nav-count">{failures}</b>
                 )}
-                {n.path === '/runs' && active > 0 && <i className="nav-live" />}
+                {n.path === '/runs' && active > 0 && (
+                  <i className="nav-live" aria-hidden="true" />
+                )}
               </NavLink>
             ))}
           </nav>
-          <div className="sidebar-middle">
-            <span className="nav-caption">YOUR SANDBOX</span>
-            <div className="sidebar-note">
-              <span className="sandbox-orbit">
-                <span />
-                <i />
-                <b />
-              </span>
-              <strong>Built to explore.</strong>
-              <p>
-                Real workflows.
-                <br />
-                Fictional integrations.
-              </p>
-              <button
-                onClick={() => {
-                  setMenu(false);
-                  setGuide(true);
-                }}
-              >
-                Open quick guide
-                <ArrowUpRight size={14} />
-              </button>
-            </div>
-          </div>
-          <div className="sidebar-bottom">
-            <button
-              onClick={() => {
-                setMenu(false);
-                setGuide(true);
-              }}
-            >
-              <BookOpen size={17} />
-              Workspace guide
-              <ArrowUpRight size={13} />
-            </button>
-            <a
-              href="https://github.com/RafayelKaramyan/rafrelay"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Github size={17} />
-              Source code
-              <ArrowUpRight size={13} />
-            </a>
-            <div className="sidebar-profile">
-              <span>RK</span>
-              <div>
-                <strong>Rafayel Karamyan</strong>
-                <small>Independent product</small>
-              </div>
-              <ShieldCheck size={15} />
-            </div>
+          <button
+            className="drawer-guide text-link"
+            onClick={() => {
+              setMenu(false);
+              setGuide(true);
+            }}
+          >
+            <CircleHelp size={17} /> Workspace guide
+          </button>
+          <div className="nav-context">
+            <span className="context-mark">N</span>
+            <span>
+              Northline<span className="context-caption">Integration workspace</span>
+            </span>
           </div>
         </aside>
         <div className="workspace-main" inert={menu}>
-          <header className="topbar">
-            <button
-              ref={menuButton}
-              className="icon-button mobile-menu"
-              aria-label="Open navigation"
-              aria-expanded={menu}
-              onClick={() => setMenu(!menu)}
-            >
-              <Menu size={20} />
-            </button>
-            <div className="breadcrumb">
-              <span>Workspace</span>
-              <ChevronRight size={13} />
-              <strong>{current?.label ?? 'Page not found'}</strong>
-            </div>
-            <div className="topbar-actions">
-              <button
-                className="command-trigger"
-                onClick={() => setCommand(true)}
-                aria-label="Search workspace"
-              >
-                <Search size={15} />
-                <span>Jump to…</span>
-                <kbd>
-                  <Command size={10} /> K
-                </kbd>
-              </button>
-              <span className="sandbox-badge">
-                <span />
-                LOCAL SANDBOX
-              </span>
-              <button
-                className="icon-button motion-toggle"
-                aria-label={
-                  book.motionPaused ? 'Enable interface motion' : 'Pause interface motion'
-                }
-                aria-pressed={book.motionPaused}
-                onClick={() => {
-                  void runtime
-                    .toggleMotion()
-                    .catch((e: unknown) => runtime.notify(errorMessage(e), true));
-                }}
-              >
-                {book.motionPaused ? <Play size={16} /> : <Pause size={16} />}
-              </button>
-              <button
-                className="icon-button"
-                aria-label="Open workspace guide"
-                onClick={() => {
-                  setMenu(false);
-                  setGuide(true);
-                }}
-              >
-                <CircleHelp size={18} />
-              </button>
-              <span className="topbar-avatar">RK</span>
-            </div>
-          </header>
+          <div className="workspace-wayfinding">
+            <span>NORTHLINE / {current?.label.toUpperCase() ?? 'PAGE NOT FOUND'}</span>
+            <span>INDEPENDENT PRODUCT BY RAFAYEL KARAMYAN</span>
+          </div>
           <main id="main-content" ref={main} tabIndex={-1}>
             {(state.engine === 'offline' || state.error) && (
               <div className="engine-error" role="alert">
@@ -553,7 +531,7 @@ function Workspace() {
               <ShieldCheck size={11} />
             </span>
             <span className="app-version">
-              RAFRELAY <b>/</b> v1.0
+              RAFRELAY <b>/</b> Integration studio <b>·</b> v1.0
             </span>
           </footer>
         </div>

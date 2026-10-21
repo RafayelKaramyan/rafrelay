@@ -50,8 +50,8 @@ export function DeliveryChart({ book }: { book: Book }) {
       >
         <defs>
           <linearGradient id={gradient} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#7776ee" stopOpacity=".22" />
-            <stop offset="100%" stopColor="#7776ee" stopOpacity=".01" />
+            <stop offset="0%" stopColor="#547c6a" stopOpacity=".22" />
+            <stop offset="100%" stopColor="#547c6a" stopOpacity=".01" />
           </linearGradient>
         </defs>
         {[0, max * 0.25, max * 0.5, max * 0.75].map((n) => (
@@ -61,14 +61,14 @@ export function DeliveryChart({ book }: { book: Book }) {
               x2={width}
               y1={height - (n / max) * (height - 15)}
               y2={height - (n / max) * (height - 15)}
-              stroke="#e9eaf2"
+              stroke="#dce0d5"
               strokeDasharray="3 5"
             />
             <text
               x="-11"
               textAnchor="end"
               y={height - (n / max) * (height - 15) + 4}
-              fill="#626d85"
+              fill="#59675e"
               fontSize="10"
             >
               {n}
@@ -79,7 +79,7 @@ export function DeliveryChart({ book }: { book: Book }) {
         <polyline
           points={line}
           fill="none"
-          stroke="#6868dd"
+          stroke="#356b55"
           strokeWidth="2.4"
           strokeLinejoin="round"
         />
@@ -91,7 +91,7 @@ export function DeliveryChart({ book }: { book: Book }) {
             width="6"
             height={(d.failed / max) * (height - 15)}
             rx="2"
-            fill="#df8e89"
+            fill="#bf684e"
           />
         ))}
         {[0, 7, 14, 21, 29].map((i) => (
@@ -100,7 +100,7 @@ export function DeliveryChart({ book }: { book: Book }) {
             x={(i / (data.length - 1)) * width}
             y="169"
             textAnchor={i === 0 ? 'start' : i === 29 ? 'end' : 'middle'}
-            fill="#626d85"
+            fill="#59675e"
             fontSize="10"
           >
             {shortTime(data[i]!.at).slice(0, 5)}
@@ -111,26 +111,5 @@ export function DeliveryChart({ book }: { book: Book }) {
         Recorded hour at workspace creation · counts update when deliveries change
       </p>
     </div>
-  );
-}
-export function Sparkline({ values, color = '#7370dc' }: { values: number[]; color?: string }) {
-  const max = Math.max(...values, 1),
-    min = Math.min(...values, 0);
-  return (
-    <svg viewBox="0 0 100 32" className="sparkline" aria-hidden="true">
-      <polyline
-        points={values
-          .map(
-            (v, i) =>
-              `${(i / (values.length - 1)) * 100},${29 - ((v - min) / (max - min)) * 25}`,
-          )
-          .join(' ')}
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }

@@ -297,3 +297,67 @@ test('main routes and the event dialog have no serious accessibility violations'
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   expect.soft(result.violations).toEqual([]);
 });
+
+test('routing map opens the correct configuration and reflects the saved policy', async ({
+  page,
+}) => {
+  await open(page);
+  await page
+    .getByRole('link', { name: 'Ledger Relay configuration · Unavailable', exact: true })
+    .click();
+  await expect(
+    page.getByRole('dialog', { name: 'Configure destination', exact: true }),
+  ).toBeVisible();
+  await page.getByLabel('Response policy').selectOption('healthy');
+  await page
+    .getByLabel('Reason for change')
+    .fill('Reviewed recovery from the routing observatory');
+  await page.getByRole('button', { name: 'Save configuration', exact: true }).click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await menu(page, 'Overview');
+  await expect(
+    page.getByRole('link', { name: 'Ledger Relay configuration · Healthy', exact: true }),
+  ).toBeVisible();
+  await page.reload();
+  await expect(
+    page.getByRole('link', { name: 'Ledger Relay configuration · Healthy', exact: true }),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByRole('region', { name: 'One stream. Every connection.', exact: true })
+      .getByText('2 healthy', { exact: true }),
+  ).toBeVisible();
+});
+test('compact and tablet tools fit the viewport and navigation restores focus', async ({
+  page,
+}, info) => {
+  for (const width of [320, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of ['', 'deliveries', 'destinations', 'runs', 'playground']) {
+      await open(page, path);
+      await expect(page.locator('main h1')).toBeVisible();
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+        `${path || 'overview'} at ${width}px`,
+      ).toBe(true);
+      if (!path)
+        await page.screenshot({
+          path: info.outputPath(`overview-${width}.png`),
+          fullPage: true,
+        });
+    }
+    const trigger = page.getByRole('button', { name: 'Open navigation', exact: true });
+    await trigger.click();
+    const drawer = page.getByRole('dialog', {
+      name: 'Workspace navigation drawer',
+      exact: true,
+    });
+    await expect(drawer).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Close navigation drawer', exact: true }),
+    ).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(drawer).not.toBeVisible();
+    await expect(trigger).toBeFocused();
+  }
+});
