@@ -1,14 +1,18 @@
 # Rafrelay
 
-A partner integration studio for investigating event failures, reviewing destination configuration and recovering deliveries with durable replay runs.
+A delivery observatory for investigating event failures, reviewing partner configuration and recovering deliveries with durable replay runs.
 
-[Live demo](https://rafayelkaramyan.github.io/rafrelay/) · [Verification and deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39687211712) · [Code walkthrough](docs/walkthrough.md)
+[Live demo](https://rafayelkaramyan.github.io/rafrelay/) · [Verification and deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39691992498) · [Code walkthrough](docs/walkthrough.md)
 
 **Independent portfolio product by [Rafayel Karamyan](https://github.com/RafayelKaramyan).** Fictional partners and synthetic sports events; no employer affiliation.
 
 ![Published Rafrelay workspace after a verified delivery recovery](docs/images/overview.jpg)
 
-The release passed **39 domain/database tests and 42 browser cases** across Chromium, Firefox and Pixel 7 emulation. The public recovery flow was also reviewed separately, including persistence after reload. See the [validation record](docs/validation.md) and [mobile capture](docs/images/overview-mobile.png).
+The release passed **39 domain/database tests and 48 browser cases** across Chromium, Firefox and Pixel 7 emulation. The public recovery flow was also reviewed separately, including persistence after reload. See the [validation record](docs/validation.md) and [mobile capture](docs/images/overview-mobile.png).
+
+## The observatory
+
+A horizontal page register gives the workspace its full canvas. The routing map connects the event source, local relay and destination configuration; its counts and policies come from the saved records. A warm paper surface, forest-green map, copper details and serif display line give the tools a consistent visual identity. Compact layouts rearrange the map and retain keyboard navigation, readable forms and motion controls.
 
 ## Try the recovery workflow
 

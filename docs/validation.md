@@ -1,34 +1,35 @@
 # Validation record
 
-## Verified release — 22 October 2026
+## Visual refresh — 22 October 2026
 
-- Application commit: `fbc35236d07bf33e4d05354b9a421493eb41ae8e`.
-- [Successful verification and GitHub Pages deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39687211712).
+- Application commit: `e82cba44b0f185779ad402e653e23a108545ecb4`.
+- [Verification and GitHub Pages deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39691992498).
 - [Published demo](https://rafayelkaramyan.github.io/rafrelay/).
 - Clean Node.js 22 dependency installation, strict TypeScript, zero-warning ESLint, formatting and production build passed.
-- **39 domain/database tests passed** in two files. These cover concurrent IndexedDB initialization, conflicting configuration saves, single lease ownership across connections, stale review rejection, storage rollback, preserved unreadable records, deduplication, pause/resume/cancel, bounded retries and late acknowledgements.
-- **42 browser cases passed:** fourteen each in desktop Chromium, desktop Firefox and Pixel 7 Chromium emulation. No cases were skipped or retried.
+- **39 domain/database tests passed** in two files. These cover concurrent IndexedDB initialization, conflicting configuration saves, single lease ownership, stale review rejection, storage rollback, preserved unreadable records, deduplication, pause/resume/cancel, bounded retries and late acknowledgements.
+- **48 browser cases passed:** sixteen each in desktop Chromium, desktop Firefox and Pixel 7 Chromium emulation. No cases were skipped or retried.
 
 ## Browser coverage and visual review
 
-The browser suite verifies derived dashboard metrics, route focus, mobile navigation, URL filters, keyboard pagination, bounded virtual DOM, inspector/dialog focus, mixed replay eligibility and reload persistence, pause/resume/cancel, retries, concurrent-tab configuration conflicts, malformed JSON and test dispatch, actual downloaded JSON contents, motion controls, rejected storage and preserved unreadable records.
+The suite verifies derived metrics, route focus, navigation, URL filters, keyboard pagination, bounded virtual DOM, inspector/dialog focus, mixed replay eligibility and reload persistence, pause/resume/cancel, retries, concurrent-tab configuration conflicts, malformed JSON and test dispatch, actual downloaded JSON contents, motion controls, rejected storage and preserved unreadable records.
 
-Representative axe scans run across all five routes and an open event inspector. Download assertions parse the generated JSON and check actual run status, reason and attempt response codes. Screenshots from the successful run were inspected on desktop and mobile, including the mobile integration heading/topology layout. These captures are available in the workflow's seven-day `browser-evidence` artifact; the [mobile overview](images/overview-mobile.png) is retained in this repository.
+The two added scenarios exercise the refreshed interface: opening configuration from the routing map, reflecting a saved policy after navigating home and reloading, and checking all five tools at both 320px and 768px. The compact navigation check verifies initial close-button focus, Escape close and return to the opening button. Desktop, tablet and compact screenshots were visually inspected. The [mobile overview](images/overview-mobile.png) is retained in this repository; the workflow's complete `browser-evidence` artifact is retained for seven days.
 
-The browser review caught and corrected entry-animation contrast, sidebar overflow on short viewports, action and POST-badge contrast, and a mobile health-panel layout collision. The final successful run includes those corrections; accessibility rules were not excluded to obtain a pass.
+Representative axe scans run across all five routes and an open event inspector. Download assertions parse generated JSON and check actual run status, reason and attempt response codes. These checks passed with the new palette and layout without excluding accessibility rules.
 
-## Separate public-demo review
+The first refresh run passed 45 browser cases. The new home/reload scenario caught a missing trailing slash in the router's deployment base: returning to the overview produced `/rafrelay`, which Vite's preview server could not serve on reload. Preserving `/rafrelay/` fixes the actual navigation target; the regression test asserts that address and verifies the saved policy after reloading. The complete passing run includes that fix.
 
-The deployed site was opened in Cloud Browser, independently of the CI test server:
+## Separate interactive review
 
-1. Changed Ledger Relay from Unavailable to Healthy with a recorded reason.
-2. Selected `evt_001800` and `evt_001796`. The replay review excluded the invalid contract and accepted only the eligible delivery.
-3. Queued the eligible event with the reason `Public demo: verified recovery of evt_001796 after configuration review`.
-4. Observed a completed 1/1 run. A full reload retained the result and exact reason. The delivery inspector showed the original HTTP 503 and the subsequent HTTP 202 acknowledgement.
-5. Triggered **Export evidence** and observed a completed browser download event. This cloud browser's returned download path was not readable from either filesystem, so no local export-file attachment is claimed. Exact JSON bytes were parsed and asserted in all three CI browser projects.
-6. Reloaded the deployed overview after the final mobile correction. It retained 1,690 acknowledged deliveries, 110 failures, two healthy destinations and one run in history. The [published workspace capture](images/overview.jpg) records this state.
+Cloud Browser review of the managed preview inspected the desktop observatory, configuration dialog, dark contract editor and completed-run presentation. At 320px and 390px, the map rearranged into a source/relay pair and a destination register. The 320px document stayed within its viewport. Configuration changed through the real form, the home navigation retained its trailing slash, and a full reload retained Healthy policy and two healthy destinations. A validated playground event was queued and completed through the actual worker.
 
-Earlier interactive review also exercised contract validation, unique test queueing and worker completion in a 390px responsive frame, and inspected 390px and 768px layouts.
+Public deployment was checked separately from the test server. The earlier completed run and Healthy destination policy remained available after the visual refresh. A mixed selection excluded invalid `evt_001800` and replayed `evt_001792`. Run `3609faed-6b95-4ec9-bbe7-2b513dce35f7` completed 1/1 and retained the exact reason `Public redesign verification: recovered evt_001792 after routing review` after reload. The inspector retained the original HTTP 503 and subsequent HTTP 202. The overview then showed 1,691 acknowledgements, 109 failures, two healthy destinations and two completed runs. The [published workspace capture](images/overview.jpg) records that refreshed interface.
+
+The public **Export evidence** action downloaded a 3,225-byte JSON bundle. Its actual bytes were parsed and checked: schema version 1, the completed run and exact reason, `evt_001792` marked delivered, and attempt codes `[503, 202]`. The CI download scenario also parses and asserts actual JSON contents in all three browser projects.
+
+## Earlier release
+
+The [initial release workflow](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39687211712) passed 39 domain/database tests and 42 browser cases. Its public review recovered `evt_001796` with a recorded reason and retained the completed run, original HTTP 503 and subsequent HTTP 202 after reload. The refresh changes presentation and canonical home navigation; the domain commands, worker and IndexedDB schema are unchanged.
 
 ## Verification limits
 

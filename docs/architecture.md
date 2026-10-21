@@ -24,6 +24,10 @@ Pause prevents new claims while allowing an in-flight attempt to finish. Cancel 
 
 ## UI and persistence
 
+The interface is a delivery observatory: a horizontal page register, a shared routing map and an editorial recovery desk. `ui/RoutingMap.tsx` derives destination policies and acknowledgement counts from the same saved workspace as the queue. Each destination is a real configuration link. The SVG paths describe relationships; their decorative movement is not a live traffic-rate measurement. Pausing motion does not pause the worker.
+
+The layout, overview and shared theme live in `App.tsx`, `pages/Overview.tsx` and `styles.css`; reusable workbench surfaces live in `ui/workbench.css`. The warm paper, forest-green diagram, copper details and serif display line distinguish this product from a sidebar dashboard. On compact screens the map becomes a source/relay pair above a two-column destination register. Navigation becomes a focus-contained drawer with Escape close and focus return.
+
 Filters are URL state; selection and form drafts are transient. Configuration, completed attempts, queued work, run controls, activity and the motion setting are durable. Virtual scrolling bounds the table DOM. A paginated alternative supports predictable keyboard navigation and is tested independently.
 
 Invalid saved schemas produce a recovery screen rather than silently reseeding. Reset compares the reviewed unreadable value against the current saved value before replacement. JSON evidence bundles include their generation, revision, records, destinations, runs and activity, and explicitly label the local simulator boundary.
