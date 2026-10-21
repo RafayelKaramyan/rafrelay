@@ -290,10 +290,10 @@ test('main routes and the event dialog have no serious accessibility violations'
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
       .analyze();
-    expect(results.violations, `${path || 'overview'} accessibility`).toEqual([]);
+    expect.soft(results.violations, `${path || 'overview'} accessibility`).toEqual([]);
   }
   await open(page, 'deliveries?inspect=dlv_001796');
   await expect(page.getByRole('dialog')).toBeVisible();
   const result = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-  expect(result.violations).toEqual([]);
+  expect.soft(result.violations).toEqual([]);
 });
