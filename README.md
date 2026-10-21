@@ -2,7 +2,13 @@
 
 A partner integration studio for investigating event failures, reviewing destination configuration and recovering deliveries with durable replay runs.
 
+[Live demo](https://rafayelkaramyan.github.io/rafrelay/) · [Verification and deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39687211712) · [Code walkthrough](docs/walkthrough.md)
+
 **Independent portfolio product by [Rafayel Karamyan](https://github.com/RafayelKaramyan).** Fictional partners and synthetic sports events; no employer affiliation.
+
+![Published Rafrelay workspace after a verified delivery recovery](docs/images/overview.jpg)
+
+The release passed **39 domain/database tests and 42 browser cases** across Chromium, Firefox and Pixel 7 emulation. The public recovery flow was also reviewed separately, including persistence after reload. See the [validation record](docs/validation.md) and [mobile capture](docs/images/overview-mobile.png).
 
 ## Try the recovery workflow
 
@@ -23,7 +29,7 @@ The initial workspace contains 1,800 recorded events, four destinations and a de
 - **Cross-tab coordination.** Read/write transactions serialize claims; per-attempt tokens and five-second leases reject stale responses. BroadcastChannel announces revisions rather than transmitting whole workspaces.
 - **Accessible interaction.** Visible focus, route heading focus, dialog focus return, meaningful labels, responsive layouts and both reduced-motion and a persisted motion pause control.
 
-See [architecture](docs/architecture.md), [validation](docs/validation.md) and [the CI workflow](.github/workflows/pages.yml).
+See [architecture](docs/architecture.md), [the code walkthrough](docs/walkthrough.md), [validation](docs/validation.md) and [the CI workflow](.github/workflows/pages.yml).
 
 ## Run locally
 

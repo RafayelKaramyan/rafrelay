@@ -1,14 +1,37 @@
 # Validation record
 
-## Executed locally on 21 October 2026
+## Verified release — 22 October 2026
 
-- Strict TypeScript, ESLint and formatting checks passed.
-- 39 domain/database tests passed, including concurrent IndexedDB initialization, conflicting configuration saves, single lease ownership across connections, stale review rejection, storage rollback, preserved unreadable records, deduplication, pause/resume/cancel, retries and late acknowledgements.
-- Production build passed.
-- Cloud Browser: inspected a failed Ledger Relay event, reviewed its payload, changed the destination to Healthy with a reason, and reviewed a mixed replay plan. One invalid contract was excluded and one event was delivered by the actual worker. Reload preserved the completed run and both original 503 and subsequent 202 attempts.
+- Application commit: `fbc35236d07bf33e4d05354b9a421493eb41ae8e`.
+- [Successful verification and GitHub Pages deployment](https://github.com/RafayelKaramyan/rafrelay/actions/runs/39687211712).
+- [Published demo](https://rafayelkaramyan.github.io/rafrelay/).
+- Clean Node.js 22 dependency installation, strict TypeScript, zero-warning ESLint, formatting and production build passed.
+- **39 domain/database tests passed** in two files. These cover concurrent IndexedDB initialization, conflicting configuration saves, single lease ownership across connections, stale review rejection, storage rollback, preserved unreadable records, deduplication, pause/resume/cancel, bounded retries and late acknowledgements.
+- **42 browser cases passed:** fourteen each in desktop Chromium, desktop Firefox and Pixel 7 Chromium emulation. No cases were skipped or retried.
 
-## Prepared, awaiting repository CI
+## Browser coverage and visual review
 
-The Playwright suite defines 14 scenarios for each of Chromium, Firefox and Pixel 7. It covers route focus, mobile navigation, URL filters, pagination, bounded virtual DOM, dialog focus, replay/retry/run controls, concurrent tabs, malformed JSON, real downloaded JSON contents, motion, failed storage and accessibility scans. These results are not claimed as passed until an actual workflow run completes.
+The browser suite verifies derived dashboard metrics, route focus, mobile navigation, URL filters, keyboard pagination, bounded virtual DOM, inspector/dialog focus, mixed replay eligibility and reload persistence, pause/resume/cancel, retries, concurrent-tab configuration conflicts, malformed JSON and test dispatch, actual downloaded JSON contents, motion controls, rejected storage and preserved unreadable records.
 
-Cloud Browser responsive frames at 390px and 768px were visually reviewed. At 390px, contract validation, test queueing and completion through the actual worker were verified. Public deployment, live export and automated multi-browser verification remain pending. No performance score or production availability claim has been measured.
+Representative axe scans run across all five routes and an open event inspector. Download assertions parse the generated JSON and check actual run status, reason and attempt response codes. Screenshots from the successful run were inspected on desktop and mobile, including the mobile integration heading/topology layout. These captures are available in the workflow's seven-day `browser-evidence` artifact; the [mobile overview](images/overview-mobile.png) is retained in this repository.
+
+The browser review caught and corrected entry-animation contrast, sidebar overflow on short viewports, action and POST-badge contrast, and a mobile health-panel layout collision. The final successful run includes those corrections; accessibility rules were not excluded to obtain a pass.
+
+## Separate public-demo review
+
+The deployed site was opened in Cloud Browser, independently of the CI test server:
+
+1. Changed Ledger Relay from Unavailable to Healthy with a recorded reason.
+2. Selected `evt_001800` and `evt_001796`. The replay review excluded the invalid contract and accepted only the eligible delivery.
+3. Queued the eligible event with the reason `Public demo: verified recovery of evt_001796 after configuration review`.
+4. Observed a completed 1/1 run. A full reload retained the result and exact reason. The delivery inspector showed the original HTTP 503 and the subsequent HTTP 202 acknowledgement.
+5. Triggered **Export evidence** and observed a completed browser download event. This cloud browser's returned download path was not readable from either filesystem, so no local export-file attachment is claimed. Exact JSON bytes were parsed and asserted in all three CI browser projects.
+6. Reloaded the deployed overview after the final mobile correction. It retained 1,690 acknowledged deliveries, 110 failures, two healthy destinations and one run in history. The [published workspace capture](images/overview.jpg) records this state.
+
+Earlier interactive review also exercised contract validation, unique test queueing and worker completion in a 390px responsive frame, and inspected 390px and 768px layouts.
+
+## Verification limits
+
+This is a browser-local simulator using fictional records, not external event delivery or a shared production service. Pixel 7 and responsive frames are emulation; physical devices, Safari and assistive-technology sessions were not exercised. Representative automated accessibility checks are not a complete accessibility certification. No Lighthouse, Core Web Vitals, production availability or external throughput benchmark is claimed.
+
+GitHub Pages serves client routes through `404.html`; a direct route may retain an HTTP 404 status while the app renders. IndexedDB storage may be cleared or evicted, background timers may delay work, and exports are evidence rather than a supported import backup. Release documentation and image changes after the tested application commit do not alter the deployed application.
